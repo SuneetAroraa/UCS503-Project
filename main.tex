@@ -1,0 +1,417 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% -----------------------------------------------------
+% bvraghav-tiet-ucs503p-article.sty
+% -----------------------------------------------------
+
+% Variable: Lab Instructor
+\makeatletter \newcommand{\BvrSetLabInstructor}[1]{%
+  \gdef\Bvr@LabInstructor{#1}}
+% default
+\newcommand{\Bvr@LabInstructor}{Dr. Raghav %
+  B. Venkataramaiyer}
+% public accessor
+\newcommand{\BvrLabInstructorValue}{\Bvr@LabInstructor}
+\makeatother
+
+% Add subtitle
+\usepackage{titling}
+% -- Set title bold
+\pretitle{\begin{center}\bfseries\fontsize{18bp}{18bp}\selectfont}
+\makeatletter
+\newcommand{\BvrSubtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip 0.5em}%
+}
+\makeatother
+
+% Hints in the section title(s)
+\newcommand{\BvrHint}[1]{%
+  {\normalfont\normalsize\itshape\hfill #1}}
+
+% -----------------------------------------------------
+
+\title{Real-Time Text Simplification for Dyslexic Readers}
+
+\BvrSetLabInstructor{Paramveer Kaur}
+
+\BvrSubtitle{%
+  Project Proposal for UCS503P  \\
+  Submitted to: \BvrLabInstructorValue \\ \bfseries
+  Thapar Institute of Engineering and Technology%
+}
+
+\author{
+  Suneet Singh Arora, CSED%
+  \thanks{Roll No: \texttt{1024030174}, %
+    Email: \texttt{sarora2\_be24\@thapar.edu}}
+  \and
+  Dhruv Kumar Garg, CSED%
+  \thanks{Roll No: \texttt{1024030175}, %
+    Email: \texttt{dgarg1\_be24\@thapar.edu}}
+}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Higher-order goal%
+\BvrHint{\ldots secondary framing}}
+Help dyslexic and struggling readers comprehend dense text more easily by developing a real-time text simplification and accessibility tool. The system rewrites pasted text or uploaded document content into shorter, simpler sentences using natural language processing while preserving the original meaning, and renders it with dyslexia-friendly typography. It also provides a read along text-to-speech mode with word-level highlighting and lets users compare the simplified version against the original, keeping the reader in control of how aggressively the text is simplified.
+
+\section{Time-to-value %
+\BvrHint{\ldots primary heuristic}}
+
+\begin{itemize}[leftmargin=0.7cm]
+    \item We will deliver early value by developing the core real-time text simplification pipeline. The first version will accept complex text, identify difficult words and sentence structures, and generate simpler alternatives for dyslexic readers.
+    
+    \item The initial iteration will focus on text preprocessing, readability analysis, difficult word detection, and NLP-based simplification. Once stable, additional features such as personalization and adaptive difficulty adjustment will be introduced.
+    
+    \item Future iterations will add context-aware simplification, user-specific reading profiles, text-to-speech support, and accessibility-focused analytics.
+    
+    \item Success will be measured by demonstrating a working system that simplifies text in real time, improves readability, and helps dyslexic readers better understand complex content.
+\end{itemize}
+
+\newpage
+\section{Problem Statement}
+
+Dyslexic readers often face challenges while processing complex written content due to difficulties with word recognition, sentence comprehension, and reading fluency. Existing accessibility tools may provide basic text adjustments but often lack intelligent simplification that preserves meaning while improving readability. The main problems are:
+
+\begin{itemize}[leftmargin=0.7cm]
+    \item \textbf{Complex text comprehension:} Long sentences, difficult vocabulary, and complex grammatical structures can increase cognitive load and make reading challenging for dyslexic individuals.
+    
+    \item \textbf{Limited text adaptation:} Existing solutions often provide formatting changes but do not dynamically simplify text based on linguistic complexity and reader needs.
+    
+    \item \textbf{Loss of meaning during simplification:} Basic text simplification approaches may reduce complexity but fail to preserve the original context and intent of the content.
+    
+    \item \textbf{Lack of real-time assistance:} Many accessibility tools require manual processing of text, limiting their usefulness for continuous reading experiences across digital platforms.
+    
+\end{itemize}
+\textbf{Why this matters now (contextual relevance):} With increasing amounts of digital content being consumed daily, dyslexic readers need intelligent accessibility solutions that can reduce reading difficulty while preserving the original meaning of text. A real-time AI-based text simplification system can improve reading comprehension, provide personalized assistance, and create a more inclusive digital reading experience without replacing the reader's ability to engage with the original content.
+
+\section{Proposed Solution %
+\BvrHint{\ldots Software Proposition}}
+
+\subsection{Overview}
+
+Build a \textbf{Real-Time Text Simplification System for Dyslexic Readers} with the following components:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Text input and preprocessing module:} accepts digital text input and performs preprocessing operations such as sentence segmentation and linguistic analysis to prepare content for simplification.
+
+    \item \textbf{Text complexity analysis module:} identifies difficult words, complex sentence structures, and readability factors that may create challenges for dyslexic readers.
+
+    \item \textbf{AI-based simplification engine:} uses natural language processing techniques to generate simpler alternatives while preserving the original meaning and context of the text.
+
+    \item \textbf{Real-time assistance module:} provides quick text simplification after user input, reducing the effort required to manually rewrite complex content.
+
+    \item \textbf{Personalization module:} adapts simplification levels based on user preferences and reading requirements to provide a more effective reading experience.
+
+    \item \textbf{Accessibility support module:} integrates features such as improved readability formatting and optional text-to-speech support to enhance content accessibility.
+
+\end{itemize}
+
+\subsection{Core workflow}
+
+\begin{enumerate}[leftmargin=0.7cm]
+
+    \item User provides the text content through the system interface. The input text is processed and prepared through preprocessing steps such as sentence segmentation and tokenization.
+
+    \item The system analyzes the text to identify linguistic complexity, difficult vocabulary, and sentence structures that may be challenging for dyslexic readers.
+
+    \item The simplification engine applies NLP-based techniques to generate easier-to-understand alternatives while maintaining the original meaning and context.
+
+    \item The simplified text is presented to the user in real time, along with improved readability features to support easier comprehension.
+
+    \item The system can adapt simplification based on user preferences, allowing different levels of text complexity reduction for individual reading needs.
+
+    \item Additional accessibility features such as text-to-speech and readability enhancements can be integrated to provide a more inclusive reading experience.
+
+    The overall workflow is:
+
+    \textit{Input Text $\rightarrow$ Text Processing $\rightarrow$ Complexity Analysis $\rightarrow$ AI Simplification $\rightarrow$ Simplified Output $\rightarrow$ Improved Reading Experience}.
+
+\end{enumerate}
+
+\subsection{Operational constraints for an educational, resource-limited setting}
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Ensure the core text simplification pipeline can run on standard computing resources without requiring specialized hardware.
+
+    \item Prioritize simplification accuracy, meaning preservation, readability improvement, and real-time response over unnecessarily complex model architectures.
+
+    \item Use lightweight NLP models and optimization techniques to maintain efficient processing and low latency during text simplification.
+
+    \item Minimize storage of user-provided text and personal reading data to reduce privacy and security risks.
+
+    \item Keep the system lightweight and suitable for local development or deployment on modest cloud infrastructure.
+
+\end{itemize}
+
+\section{Solution Approach %
+\BvrHint{\ldots Engineering focus}}
+
+This is an engineering-focused project, so the emphasis is on building a practical accessibility solution for dyslexic readers using established natural language processing, machine learning, and software engineering techniques rather than developing a novel language model. The system focuses on real-time text analysis and simplification to improve readability while preserving the original meaning of the content.
+
+\subsection{Text Simplification %
+\BvrHint{\ldots practical NLP approach}}
+
+Text simplification will use a combination of linguistic analysis and NLP-based techniques:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Preprocess input text to identify sentence boundaries, word complexity, and linguistic patterns that affect readability.
+
+    \item Analyze text difficulty using readability metrics, vocabulary complexity, and sentence structure analysis.
+
+    \item Generate simplified text using NLP-based transformation techniques while preserving the original meaning and context.
+
+    \item Establish a baseline simplification approach and evaluate improvements using readability metrics and human evaluation where possible.
+
+    \item Combine complexity analysis and simplification methods to produce clearer, more accessible text for dyslexic readers.
+
+    \item Provide simplified output as reading assistance while keeping the user in control of the original content and interpretation.
+
+\end{itemize}
+
+\subsection{AI-assisted text adaptation %
+\BvrHint{\ldots generative assistance}}
+
+Generative AI will be used selectively for improving text accessibility:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Generate simplified versions of complex sentences while preserving the original meaning and context.
+
+    \item Provide alternative explanations for difficult words, phrases, and concepts to improve understanding.
+
+    \item Adapt text complexity based on user preferences and reading requirements.
+
+    \item Ensure generated simplifications assist reading comprehension and do not alter the intended meaning of the original content.
+
+\end{itemize}
+
+\subsection{Web architecture %
+\BvrHint{\ldots web-based solution}}
+
+A three-tier web architecture with an integrated NLP pipeline for real-time text simplification:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Presentation layer:} React-based user interface for entering text, viewing simplified output, adjusting simplification preferences, and accessing accessibility features.
+
+    \item \textbf{Application layer:} FastAPI backend manages text processing requests, user preferences, simplification workflows, and communication between the interface and NLP services.
+
+    \item \textbf{NLP and data layer:} Python-based NLP services perform text analysis, complexity detection, and simplification generation, while optional storage manages user preferences, processing history, and system configuration data.
+
+\end{itemize}
+\subsection{Data Management %
+\BvrHint{\ldots lightweight user data storage}}
+
+The system will use lightweight storage for maintaining user preferences and optional interaction history while minimizing unnecessary retention of user-generated content.
+
+The database may contain entities such as:
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Users:} stores user identifiers and accessibility preferences such as preferred simplification level, reading settings, and interface preferences.
+
+    \item \textbf{Text processing history:} stores optional records of processing activity, timestamps, and references to previous simplification sessions without retaining unnecessary user-generated content.
+
+    \item \textbf{Language analysis data:} stores extracted readability metrics, text complexity scores, and identified difficult words for evaluation and system improvement.
+
+    \item \textbf{System configuration:} stores application settings, model parameters, and simplification preferences required for consistent system operation.
+
+\end{itemize}
+
+The system will avoid unnecessary storage of user-provided text and retain only essential metadata required for user preferences, system operation, and optional history management.
+
+\subsection{Development and Testing}
+
+Git/GitHub will be used for version control, while automated tests will verify important application, NLP, and text-processing functionality.
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Version control:} Git and GitHub will be used to track development changes, manage stable versions, and maintain a structured codebase.
+
+    \item \textbf{Backend testing:} automated tests will verify API endpoints, input validation, user preference handling, and core application workflows.
+
+    \item \textbf{NLP testing:} tests will evaluate text preprocessing, complexity analysis, simplification generation, and preservation of original meaning.
+
+    \item \textbf{Performance testing:} the system will be evaluated for response time and processing efficiency to ensure real-time text simplification.
+
+    \item \textbf{Reproducibility:} dependency files and consistent project structure will be maintained so that the application and NLP pipeline can be reliably recreated.
+
+\end{itemize}
+
+\section{Evaluation Criteria %
+\BvrHint{\ldots measurable and attributable}}
+
+We define success using measurable criteria covering simplification quality, readability improvement, meaning preservation, and system performance.
+
+\subsection{Primary evaluation metric}
+
+\textbf{Text simplification quality:} measure how effectively the system reduces text complexity while maintaining the original meaning and improving readability for dyslexic readers.
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Metrics:} evaluate readability improvement using metrics such as Flesch Reading Ease, sentence complexity reduction, vocabulary difficulty reduction, and human evaluation of simplified outputs.
+
+    \item \textbf{Attribution:} evaluate performance on a test set of complex texts by comparing original and simplified versions based on readability improvement and meaning preservation.
+
+\end{itemize}
+
+\subsection{Secondary evaluation metrics}
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Meaning preservation:} evaluate whether simplified text retains the original intent and information without introducing incorrect changes or losing important details.
+
+    \item \textbf{Vocabulary simplification quality:} measure whether complex words and phrases are replaced with simpler alternatives that remain appropriate for the context.
+
+    \item \textbf{Sentence structure improvement:} evaluate the reduction of complex sentence patterns, sentence length, and grammatical difficulty after simplification.
+
+    \item \textbf{Readability improvement:} compare readability scores between original and simplified text to determine whether the system effectively reduces reading difficulty.
+
+    \item \textbf{User usability:} assess whether dyslexic readers can easily interact with the system, understand the simplified output, and adjust accessibility preferences.
+
+    \item \textbf{Processing efficiency:} measure the time required to analyze and simplify text to ensure the system provides real-time assistance.
+
+\end{itemize}
+
+\subsection{Pilot validation plan %
+\BvrHint{\ldots high-level}}
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item Evaluate the system on a fixed collection of complex texts covering different domains, reading levels, and types of linguistic difficulty.
+
+    \item Compare original and simplified outputs using readability metrics to measure reduction in text complexity and improvement in accessibility.
+
+    \item Manually review simplified texts to evaluate meaning preservation, vocabulary choices, and whether the generated content remains faithful to the original text.
+
+    \item Conduct a small usability evaluation with student users to determine whether the simplified output improves readability and whether the interface is easy to use.
+
+    \item Record common simplification errors, meaning changes, and processing delays to refine the NLP pipeline before the final evaluation.
+
+\end{itemize}
+
+\section{Scalability %
+\BvrHint{\ldots with foresight}}
+The proposed system should remain practical as the volume of text, users, and simplification requests increases.
+\begin{enumerate}[leftmargin=0.7cm]
+    \item \textbf{Scalable (theoretically):} The system should support increasing simplification workload by:
+    
+    \begin{itemize}[leftmargin=0.7cm]
+        \item keeping text extraction, NLP, simplification, and presentation components modular,
+        \item allowing simplified segments to be cached and reused for repeated or overlapping text,
+        \item separating text ingestion from simplification logic so that new simplification models or rules can be swapped in without reprocessing the entire pipeline.
+    \end{itemize}
+    
+    \item \textbf{Operationally deployable (practically):} The system should remain suitable for deployment on common cloud infrastructure by:
+    
+    \begin{itemize}[leftmargin=0.7cm]
+        \item separating the frontend, backend, and NLP/simplification processing components,
+        \item using lightweight persistent storage for optional user preferences, simplification history, and analytics,
+        \item containerizing the application components for reproducible deployment,
+        \item allowing more computationally intensive simplification workloads (ML/LLM-based rewriting) to be scaled independently if usage increases.
+    \end{itemize}
+\end{enumerate}
+
+\section{Engine Availability Heuristic}
+A mature set of tools and libraries is available to implement the proposed system as a web-based text simplification platform:
+\begin{itemize}[leftmargin=0.7cm]
+    \item \textbf{Frontend framework:} React for the text input interface, simplification output view, and readability comparison display.
+    
+    \item \textbf{Backend framework:} FastAPI for application endpoints, validation, asynchronous requests, and integration between the frontend, database, and NLP components.
+    
+    \item \textbf{NLP and machine learning:}Python, spaCy/NLTK, and readability analysis libraries for sentence segmentation, tokenization, lexical analysis, and readability scoring. Transformer-based models or LLM APIs may be used for advanced semantic-aware simplification.
+    
+    \item \textbf{Generative AI:} Gemini API or equivalent models may be used for optional context-aware sentence rewriting and advanced simplification while maintaining a rule-based fallback approach.
+    
+    \item \textbf{Database:} Lightweight relational storage for optional user preferences, simplification history, and readability analytics.
+    
+    \item \textbf{Model and data processing:} Python-based services for text extraction, sentence segmentation, lexical substitution, and readability scoring.
+    
+    \item \textbf{Testing and version control:} pytest, Git, and GitHub for application testing and source-code management.
+    
+    \item \textbf{Deployment:} Docker for reproducible local and cloud deployment of the application components.
+\end{itemize}
+We will use these established components to focus on simplification quality, readability improvement, real-time performance, and accessibility rather than developing infrastructure or language models from scratch.
+
+\section{Project Scope and Deliverables %
+\BvrHint{\ldots iteration-friendly}}
+\subsection{Initial Deliverable %
+\BvrHint{\ldots first iteration}}
+\begin{itemize}[leftmargin=0.7cm]
+    \item Text input support via paste and file upload.
+    
+    \item Preprocessing pipeline: sentence segmentation and readability scoring (Flesch-Kincaid, SMOG).
+    
+    \item Rule-based lexical simplification using a complex-to-simple word substitution dictionary.
+    
+    \item Baseline syntactic simplification for long or complex sentences.
+    
+    \item Initial dyslexia-friendly presentation layer (adjustable font, spacing, line height, background tint).
+    
+    \item Side-by-side display of original text, simplified text, and readability score comparison.
+    
+    \item Evaluation of simplification quality on a fixed validation set of sample texts.
+\end{itemize}
+\subsection{Subsequent Deliverables}
+\begin{itemize}[leftmargin=0.7cm]
+    \item Improved simplification pipeline using ML/LLM-based rewriting compared against the rule-based baseline.
+    
+    \item Real-time performance optimization through debounced/incremental processing and caching of simplified segments.
+    
+    \item Meaning-preservation and fluency evaluation of AI-generated simplifications against source text.
+    
+    \item Adjustable simplification intensity and per-user calibration of reading level.
+    
+    \item Text-to-speech integration for simplified output.
+    
+    \item Future extension: browser-based overlay for simplifying live web-page content beyond pasted text.
+    
+    \item Readability analytics dashboard showing before/after scores and simplification statistics across sessions.
+    
+    \item Final web application (frontend + backend) with deployment, testing, documentation, GitHub repository, and final demonstration.
+\end{itemize}
+
+\section{Risks and Mitigations}
+
+\begin{itemize}[leftmargin=0.7cm]
+
+    \item \textbf{Simplification distorting meaning:} aggressive lexical or syntactic rewriting may drop nuance or alter the original intent of the text; evaluate simplified output against the source for meaning preservation, and let users toggle simplification intensity.
+
+    \item \textbf{Poor readability improvement:} rule-based substitutions may not meaningfully reduce reading difficulty for all users; compare multiple approaches (rule-based vs.\ ML-based), evaluate against readability metrics (Flesch-Kincaid, SMOG) on held-out text samples, and retain manual review during testing.
+
+    \item \textbf{Hallucinated or unfaithful rewrites:} generative-AI-based simplification may introduce content not present in the original text; ground prompts in the extracted source text and require outputs to remain traceable to it.
+
+    \item \textbf{Text extraction issues:} varied input sources (PDFs, web pages, pasted text) may result in incomplete or malformed text extraction; validate extracted content and provide fallback handling for unsupported formats.
+
+    \item \textbf{Real-time performance constraints:} transformer-based or LLM-based simplification may introduce latency that undermines the ``real-time'' experience; use debounced/incremental processing, caching of previously simplified segments, and lightweight models where practical.
+
+    \item \textbf{Accessibility validity:} presentation choices (fonts, spacing, color) must align with established dyslexia-friendly guidelines rather than assumptions; reference standards such as the British Dyslexia Association style guide and validate with user feedback where possible.
+
+    \item \textbf{External API dependency:} generative-AI-based simplification features may depend on external API availability or usage limits; ensure a rule-based fallback simplifier can operate independently of external services.
+
+    \item \textbf{Data privacy:} user-submitted text may contain sensitive personal or academic content; minimize retained data, avoid unnecessary storage, and use publicly available or synthetic text for development and testing.
+
+    \item \textbf{Scope creep:} integrating browser-based content support, TTS, per-user calibration, and analytics dashboards may exceed the project's academic timeframe; prioritize the core text-in $\rightarrow$ simplified-text-out pipeline before optional features.
+\end{itemize}
+
+\section{Summary}
+
+This project proposes a real-time text simplification platform designed to help dyslexic readers process written content more easily through pasted text and uploaded documents, with future support for browser-based content. The system combines NLP-based readability analysis, lexical and syntactic simplification, and optional generative AI to rewrite complex sentences into plain language, flag hard-to-read passages, adapt formatting to dyslexia-friendly standards, and provide readability analytics. Development will follow an incremental approach, beginning with text ingestion and readability scoring before progressing to rule-based and ML-driven simplification, real-time performance optimization, adaptive presentation controls, and personalized simplification calibration. Success will be measured through simplification accuracy, readability-score improvement, processing latency, output fluency and meaning preservation, and system usability. The platform is intended as an assistive reading tool that reduces cognitive load for dyslexic users while keeping the original meaning of the text intact and under the user's control.
+
+\end{document}
