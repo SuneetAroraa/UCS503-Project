@@ -1,2 +1,4 @@
+.venv/
 __pycache__/
-test_preprocessing.py
+*.pyc
+.DS_Store*.o

@@ -1,9 +1,12 @@
 import spacy
+
 nlp = spacy.load("en_core_web_sm")
+
 
 def segment_sentences(text: str):
     doc = nlp(text)
     return [sent.text.strip() for sent in doc.sents]
+
 
 def process_sentence(sent_span, sent_id: int):
     return {
@@ -13,6 +16,11 @@ def process_sentence(sent_span, sent_id: int):
         "pos_tags": [token.pos_ for token in sent_span],
     }
 
+
 def preprocess(text: str):
     doc = nlp(text)
-    return [process_sentence(sent, i) for i, sent in enumerate(doc.sents)]
+
+    return [
+        process_sentence(sent, i)
+        for i, sent in enumerate(doc.sents)
+    ]
