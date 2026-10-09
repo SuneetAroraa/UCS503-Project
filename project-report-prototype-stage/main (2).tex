@@ -1,0 +1,518 @@
+\documentclass[openany]{tietreport}
+
+
+% Import images
+\usepackage{graphicx}
+
+% Bibliography configuration
+\usepackage[
+  date=year,
+  style=alphabetic,
+  backend=biber,
+  sorting=nty,
+  maxnames=5,
+  minnames=3,
+  maxalphanames=4,
+  minalphanames=3,
+  backref=true,
+  doi=false,
+  isbn=false,
+  url=false,
+  eprint=false
+]{biblatex}
+\addbibresource{references.bib}
+
+%% ==================================================
+%% CUSTOMIZE THESE FIELDS FOR YOUR PROJECT
+%% ==================================================
+
+% Course/Lab header
+\TitlePageHeader{%
+  UCS503 - Software Engineering%
+}
+
+% Main project title
+\ProjectTitle{%
+  Real-Time Text Simplification for Dyslexic Readers%
+}
+
+% Subtitle or project description
+\ProjectSubTitle{%
+  %
+}
+
+% Student information (up to 4 students)
+\author{%
+  \texttt{1024030174} Suneet Singh Arora \\
+  \texttt{1024030175} Dhruv Kumar Garg%
+}
+
+% Group number, degree, year, program
+\TitlePageSubText{%
+  Group: \texttt{3C16} BE Third Year, CSE%
+}
+
+% Faculty advisor/guide name
+\AdvisorName{%
+  Paramveer Kaur%
+}
+
+% Evaluation period and department info
+\TitlePageFooterText{{%
+    \large Mid-Semester Evaluation \\[0.2cm]
+    \bfseries Computer Science and Engineering
+    Department%
+  } \\[0.15cm]
+  Thapar Institute of Engineering and Technology,
+  Patiala%
+}
+
+%% ==================================================
+
+\begin{document}
+
+% Generate title page
+\maketitle
+
+% Table of contents (auto-generated from chapters)
+\tableofcontents
+
+% ===== CHAPTER 1: INTRODUCTION =====
+
+\chapter{Introduction}
+
+\section{Background and Context}
+Written text often contains difficult vocabulary and long sentences that make it hard to read, particularly for readers with dyslexia, limited reading proficiency, or non-native English speakers. Making text easier to read without losing its meaning is a well-known problem in Natural Language Processing, studied as text simplification.
+
+Readability formulas such as the Flesch Reading Ease score, the Flesch--Kincaid Grade Level, and the SMOG Index estimate text difficulty from sentence length and syllable counts. These scores are proxies for difficulty rather than direct measures of comprehension, but they allow repeatable comparison between two versions of a text.
+
+This project presents a rule based Python prototype that replaces selected difficult words and phrases with simpler alternatives, splits sentences where its rules allow, and compares readability statistics before and after simplification. It uses the \texttt{textstat} library and the NLTK CMU Pronouncing Dictionary, and does not use a trained machine learning model yet.
+
+\subsection{Problem Statement}
+
+Dyslexic readers often face challenges while processing complex written content due to difficulties with word recognition, sentence comprehension, and reading fluency. Existing accessibility tools may provide basic text adjustments but often lack intelligent simplification that preserves meaning while improving readability. The main problems are:
+
+\begin{itemize}
+    \item \textbf{Complex text comprehension:} Long sentences, difficult vocabulary, and complex grammatical structures can increase cognitive load and make reading challenging for dyslexic individuals.
+    
+    \item \textbf{Limited text adaptation:} Existing solutions often provide formatting changes but do not dynamically simplify text based on linguistic complexity and reader needs.
+    
+    \item \textbf{Loss of meaning during simplification:} Basic text simplification approaches may reduce complexity but fail to preserve the original context and intent of the content.
+    
+    \item \textbf{Lack of real-time assistance:} Many accessibility tools require manual processing of text, limiting their usefulness for continuous reading experiences across digital platforms.
+    
+\end{itemize}
+\textbf{Why this matters now (contextual relevance):} With increasing amounts of digital content being consumed daily, dyslexic readers need intelligent accessibility solutions that can reduce reading difficulty while preserving the original meaning of text. A real time AI based text simplification system can improve reading comprehension, provide personalized assistance, and create a more inclusive digital reading experience without replacing the reader's ability to engage with the original content.
+
+\section{Project Objectives}
+The objectives of this project are:
+\begin{enumerate}
+    \item To implement a text processing pipeline in Python that accepts English text and prepares it for analysis.
+    \item To simplify selected difficult words and phrases using a manually defined set of replacement and sentence splitting rules.
+    \item To calculate standard readability measures (Flesch Reading Ease, Flesch--Kincaid Grade Level, and SMOG Index) along with word count, sentence count, average sentence length, and difficult word count.
+    \item To compare the original and simplified text and summarize the change in each metric.
+    \item To test the prototype on a small set of varied texts and document its limitations, including cases where substitutions reduce grammatical quality or alter meaning.
+\end{enumerate}
+
+
+% ===== CHAPTER 2: METHODOLOGY & DESIGN =====
+
+\chapter{Methodology and Design}
+
+\section{System Architecture}
+The system is a modular command line pipeline written in Python, with each stage implemented as a separate module.
+
+\subsection{High-Level Design}
+The input text is first cleaned by the preprocessing module. The readability module then computes statistics for the original text. The rule-based simplifier applies word/phrase replacements and sentence splitting, after which the readability module is run again on the simplified text. Finally, the evaluation module compares the two sets of statistics, and \texttt{main.py}, which orchestrates all stages, prints the results to the terminal.
+
+
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|p{9cm}|}
+\hline
+\textbf{Module} & \textbf{Responsibility} \\ \hline
+\texttt{preprocessing.py} & Cleans the input text before processing. \\ \hline
+\texttt{readability.py} & Computes word count, sentence count, average sentence length, Flesch Reading Ease, Flesch--Kincaid Grade Level, SMOG Index, and difficult words. \\ \hline
+\texttt{simplifier.py} & Applies rule-based replacements and sentence splitting. \\ \hline
+\texttt{evaluation.py} & Compares original and simplified statistics. \\ \hline
+\texttt{main.py} & Connects the modules and prints results. \\ \hline
+\end{tabular}
+\caption{Modules and their responsibilities}
+\end{table}
+\newpage
+\subsection{Technical Stack}
+\begin{itemize}
+    \item \textbf{Framework/Language:} Python, run as a command line application inside a virtual environment (\texttt{.venv}).
+    \item \textbf{Database:} None; the prototype processes text in memory and does not require persistent storage.
+    \item \textbf{Tools:} Visual Studio Code, terminal, Git, and GitHub.
+    \item \textbf{Libraries:} \texttt{textstat} for readability scoring and NLTK with the CMU Pronouncing Dictionary (\texttt{cmudict}) for syllable counting.
+\end{itemize}
+
+\section{Implementation Details}
+The prototype is implemented in Python as a set of small modules, each handling one stage of the pipeline.
+
+\subsection{Module 1: Core Functionality}
+The core module is the rule based simplifier (\texttt{simplifier.py}). It applies two kinds of manually defined rules to the input text:
+\begin{itemize}
+    \item \textbf{Word and phrase substitution:} selected difficult words and phrases are replaced with simpler alternatives. For example, ``makes use of'' becomes ``uses'' and ``a large number of'' becomes ``many''.
+    \item \textbf{Sentence splitting:} sentences are divided at points defined by the splitting rules, which shortens average sentence length.
+\end{itemize}
+The rules are context insensitive, so a replacement may be unsuitable in some sentences and can produce awkward wording or alter meaning. The module therefore makes no claim of general semantic understanding.
+
+Illustrative example (single run, not an overall result):
+\begin{itemize}
+    \item \textbf{Input:} The system makes use of numerous computational resources to process a large number of files.
+    \item \textbf{Output:} The system uses a lot of computing power to process many files.
+\end{itemize}
+
+\subsection{Module 2: Secondary Features}
+The remaining modules support and evaluate the simplifier. Together they prepare the input, measure how difficult the text is, compare the results, and connect the stages into a single workflow.
+
+\begin{itemize}
+    \item \textbf{Preprocessing (\texttt{preprocessing.py}):} This module prepares the raw input string before it is analysed or simplified. Cleaning the text first ensures that the later stages receive a consistent input, so that the readability calculations and the replacement rules are not affected by irregularities in the original text.
+
+    \item \textbf{Readability analysis (\texttt{readability.py}):} uses \texttt{textstat} to compute word count, sentence count, average sentence length, Flesch Reading Ease, Flesch--Kincaid Grade Level, SMOG Index, and the count and list of difficult words. Syllable counts rely on the NLTK CMU Pronouncing Dictionary.
+
+    \item \textbf{Evaluation (\texttt{evaluation.py}):} This module takes the readability statistics of the original and simplified text and computes the change in each metric. It then produces an improvement summary indicating whether the simplified text scores as easier to read. Because readability scores are only proxies for difficulty, this summary reflects changes in the scores and does not confirm that meaning or grammatical quality has been preserved.
+
+    \item \textbf{Orchestration (\texttt{main.py}):} connects all modules and prints the results to the terminal.
+\end{itemize}
+% ===== CHAPTER 3: RESULTS & EVALUATION =====
+\chapter{Results and Evaluation}
+
+\section{Testing Methodology}
+\begin{itemize}
+    \item \textbf{Unit Testing:} Each module (\texttt{preprocessing.py}, \texttt{readability.py}, \texttt{simplifier.py}, \texttt{evaluation.py}) is to be checked individually on sample inputs. Automated unit tests are planned and have not yet been implemented.
+    \item \textbf{Integration Testing:} The full pipeline was run end to end through \texttt{main.py} on sample text, and the printed before/after comparison was inspected manually.
+    \item \textbf{Performance Testing:} Not yet carried out. No response time or throughput measurements have been recorded.
+    \item \textbf{User Testing:} Not carried out. No user study has been conducted.
+\end{itemize}
+
+\section{Performance Metrics}
+Readability is measured using word count, sentence count, average sentence length, Flesch Reading Ease, Flesch--Kincaid Grade Level, SMOG Index, and difficult word count. Table~\ref{tab:example} shows one illustrative run; it is a single example, not an average or proof of overall performance.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Version} & \textbf{Text} \\ \hline
+Original & The system makes use of numerous computational resources to process a large number of files. \\ \hline
+Simplified & The system uses a lot of computing power to process many files. \\ \hline
+\end{tabular}
+\caption{Sample input text and its simplified output}
+\label{tab:sampletext}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Metric} & \textbf{Original} & \textbf{Simplified} \\ \hline
+Word count & 15 & 12 \\ \hline
+Flesch Reading Ease & 44.97 & 60.71 \\ \hline
+Flesch--Kincaid Grade Level & 10.71 & 7.77 \\ \hline
+SMOG Index & 13.02 & 8.84 \\ \hline
+Difficult-word count & 3 & 1 \\ \hline
+\end{tabular}
+\caption{Readability metrics for the sample text in Table~\ref{tab:sampletext}}
+\label{tab:example}
+\end{table}
+
+\newpage
+\section{Analysis}
+\begin{itemize}
+    \item \textbf{Did you meet your objectives?} The pipeline, rule based simplifier, readability calculation, and before/after comparison are implemented and run locally. Testing across a varied set of texts is still pending, so the objective of documenting limitations is only partly met.
+    \item \textbf{Where did you exceed expectations?} In the illustrative run, substitution and sentence splitting lowered the grade level scores and the difficult word count. 
+    \item \textbf{What challenges did you encounter?} Rule-based replacements ignore context and can produce awkward wording or alter meaning. Readability scores are only proxies for difficulty, and sentence splitting changes sentence counts and average sentence length, which also affects the scores. 
+    \item \textbf{How did you resolve them?} These issues are not yet resolved; they are listed as future work: larger curated rules, context aware replacement, meaning preservation checks, and automated tests.
+\end{itemize}
+
+% ===== CHAPTER 4: CONCLUSION =====
+
+\chapter{Conclusion}
+
+\section{Summary of Work}
+This project implemented a rule based text simplification prototype in Python. The system accepts English text, applies manually defined word/phrase replacements and sentence splitting rules, computes readability statistics for the original and simplified versions, and prints a comparison in the terminal. The objectives of building the pipeline, simplifying selected wording, calculating standard readability measures, and comparing original and simplified text were met. The objective of testing on a varied set of texts and documenting limitations is only partly met, as broader evaluation is still pending.
+
+\section{Key Findings}
+\begin{itemize}
+    \item \textbf{Finding 1:} In the illustrative test run, substitution and sentence splitting improved the readability scores and reduced the difficult word count.
+    \item \textbf{Finding 2:} Readability scores are only proxies for difficulty, so a better score does not guarantee preserved meaning or grammatical quality.
+    \item \textbf{Finding 3:} Context-insensitive rules can produce awkward or unsuitable replacements.
+\end{itemize}
+
+\section{Future Work and Recommendations}
+\begin{enumerate}
+    \item \textbf{Potential enhancements:} larger and better curated replacement rules, more robust sentence handling, and automated unit and integration tests.
+    \item \textbf{Alternative approaches:} context aware word replacement and, later, trained simplification models compared against the rule based baseline.
+    \item \textbf{Scalability improvements:} support for file input and batch processing of larger texts, and a larger evaluation dataset.
+    \item \textbf{Integration with other systems:} an optional graphical or web interface for non-technical users.
+    \item \textbf{Real-world deployment considerations:} meaning preservation checks and user testing, including with dyslexic readers, before any practical use.
+\end{enumerate}
+
+\section{Final Remarks}
+The prototype shows that simple, transparent rules can lower readability scores on suitable text, while also showing the limits of rule based simplification without context or meaning checks. It provides a foundation that can be extended with broader evaluation and more capable methods.
+
+% ===== BIBLIOGRAPHY =====
+
+% Print bibliography with heading in TOC
+\printbibliography[heading=bibintoc]
+
+\end{document}
+\documentclass{tietreport}
+
+% Import images
+\usepackage{graphicx}
+
+% Bibliography configuration
+\usepackage[
+  date=year,
+  style=alphabetic,
+  backend=biber,
+  sorting=nty,
+  maxnames=5,
+  minnames=3,
+  maxalphanames=4,
+  minalphanames=3,
+  backref=true,
+  doi=false,
+  isbn=false,
+  url=false,
+  eprint=false
+]{biblatex}
+\addbibresource{references.bib}
+
+%% ==================================================
+%% CUSTOMIZE THESE FIELDS FOR YOUR PROJECT
+%% ==================================================
+
+% Course/Lab header
+\TitlePageHeader{%
+  Your Course Code - Course Title%
+}
+
+% Main project title
+\ProjectTitle{%
+  Your Project Title Here%
+}
+
+% Subtitle or project description
+\ProjectSubTitle{%
+  A Descriptive Subtitle for Your Work%
+}
+
+% Student information (up to 4 students)
+\author{%
+  \texttt{102XXXXXXX} Student Name One \\
+  \texttt{102XXXXXXX} Student Name Two \\
+  \texttt{102XXXXXXX} Student Name Three \\
+  \texttt{102XXXXXXX} Student Name Four%
+}
+
+% Group number, degree, year, program
+\TitlePageSubText{%
+  Group: \texttt{XXXX} BE Third Year, CSE%
+}
+
+% Faculty advisor/guide name
+\AdvisorName{%
+  Dr. Faculty Member Name%
+}
+
+% Evaluation period and department info
+\TitlePageFooterText{{%
+    \large Mid-Semester Evaluation \\[0.2cm]
+    \bfseries Computer Science and Engineering
+    Department%
+  } \\[0.15cm]
+  Thapar Institute of Engineering and Technology,
+  Patiala%
+}
+
+%% ==================================================
+
+\begin{document}
+
+% Generate title page
+\maketitle
+
+% Table of contents (auto-generated from chapters)
+\tableofcontents
+
+% ===== CHAPTER 1: INTRODUCTION =====
+
+\chapter{Introduction}
+
+\section{Background and Context}
+
+Begin your introduction here. Provide context
+for your project and explain why it matters.
+This section should clearly establish the
+problem or opportunity your project addresses.
+
+\subsection{Problem Statement}
+
+Define the specific problem your project
+tackles. Be precise and provide relevant
+background information that helps readers
+understand the scope and significance.
+
+\section{Project Objectives}
+
+\begin{enumerate}
+  \item \textbf{Objective 1:} State your first
+    specific, measurable objective.
+  \item \textbf{Objective 2:} State your second
+    objective.
+  \item \textbf{Objective 3:} State your third
+    objective.
+\end{enumerate}
+
+Document your SMART objectives (Specific,
+Measurable, Achievable, Relevant, Time-bound)
+clearly for your evaluators.
+
+% ===== CHAPTER 2: METHODOLOGY & DESIGN =====
+
+\chapter{Methodology and Design}
+
+\section{System Architecture}
+
+Describe your overall system design. You can
+reference figures and tables in your document:
+
+\subsection{High-Level Design}
+
+Explain the major components and how they
+interact. This section demonstrates your
+understanding of the problem and your
+solution approach.
+
+\subsection{Technical Stack}
+
+\begin{itemize}
+  \item \textbf{Framework/Language:} List your
+    primary technologies.
+  \item \textbf{Database:} Specify database
+    systems if applicable.
+  \item \textbf{Tools:} List development and
+    testing tools used.
+  \item \textbf{Libraries:} Note key libraries
+    or frameworks.
+\end{itemize}
+
+\section{Implementation Details}
+
+\subsection{Module 1: Core Functionality}
+
+Describe the implementation of your first
+major module. Include technical details about
+algorithms, data structures, or design
+patterns used.
+
+\subsection{Module 2: Secondary Features}
+
+Continue documenting your implementation
+by module, demonstrating the complexity and
+depth of your work.
+
+% ===== CHAPTER 3: RESULTS & EVALUATION =====
+
+\chapter{Results and Evaluation}
+
+\section{Testing Methodology}
+
+Describe your testing strategy:
+
+\begin{itemize}
+  \item \textbf{Unit Testing:} How you tested
+    individual components.
+  \item \textbf{Integration Testing:} How you
+    verified components work together.
+  \item \textbf{Performance Testing:} How you
+    measured system performance.
+  \item \textbf{User Testing:} If applicable,
+    how users evaluated your system.
+\end{itemize}
+
+\section{Performance Metrics}
+
+Present your results clearly with tables and
+figures. For example:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|r|r|}
+  \hline
+  \textbf{Metric} & \textbf{Target} &
+  \textbf{Achieved} \\
+  \hline
+  Response Time & $< 100$ms & $85$ms \\
+  \hline
+  Accuracy & $> 95\%$ & $97.2\%$ \\
+  \hline
+  Throughput & $1000$ req/s & $1250$ req/s \\
+  \hline
+\end{tabular}
+\caption{Performance Results Summary}
+\label{tab:performance}
+\end{table}
+
+\section{Analysis}
+
+Analyze your results:
+
+\begin{itemize}
+  \item Did you meet your objectives?
+  \item Where did you exceed expectations?
+  \item What challenges did you encounter?
+  \item How did you resolve them?
+\end{itemize}
+
+% ===== CHAPTER 4: CONCLUSION =====
+
+\chapter{Conclusion}
+
+\section{Summary of Work}
+
+Summarize what you accomplished. Remind
+readers of your objectives and explain which
+ones you met.
+
+\section{Key Findings}
+
+\begin{itemize}
+  \item \textbf{Finding 1:} State a significant
+    result or insight from your work.
+  \item \textbf{Finding 2:} Describe another
+    important discovery.
+  \item \textbf{Finding 3:} Highlight any
+    unexpected results.
+\end{itemize}
+
+\section{Future Work and Recommendations}
+
+Discuss how others could extend or improve
+your work:
+
+\begin{enumerate}
+  \item Potential enhancements to your system~\cite{latex2e}
+  \item Alternative approaches worth exploring
+  \item Scalability improvements
+  \item Integration with other systems
+  \item Real-world deployment considerations
+\end{enumerate}
+
+\section{Final Remarks}
+
+Conclude with reflections on what you learned
+and the impact of your work.
+
+% ===== BIBLIOGRAPHY =====
+
+% Print bibliography with heading in TOC
+\printbibliography[heading=bibintoc]
+
+\end{document}
