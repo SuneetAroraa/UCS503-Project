@@ -74,10 +74,13 @@ def main():
         f"{result['summary']['grade_level_reduction']:.2f}"
     )
 
-    print(
-        f"SMOG reduction: "
-        f"{result['summary']['smog_reduction']:.2f}"
-    )
+    if result["summary"]["smog_applicable"]:
+        print(
+            f"SMOG reduction: "
+            f"{result['summary']['smog_reduction']:.2f}"
+        )
+    else:
+        print("SMOG reduction: N/A (text has fewer than 30 sentences)")
 
     print(
         f"Difficult words reduced: "

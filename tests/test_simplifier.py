@@ -32,7 +32,7 @@ class TestSimplifier(unittest.TestCase):
         )
         expected = (
             "The application requires significant resources. "
-            "It provides accessibility features that assist users."
+            "However, it provides accessibility features that assist users."
         )
         self.assertEqual(simplify_sentences(text), expected)
 
@@ -43,6 +43,28 @@ class TestSimplifier(unittest.TestCase):
 
     def test_empty_input(self):
         self.assertEqual(simplify_text(""), "")
+
+    
+    def test_although_preserves_contrast(self):
+        text = "Although the drug is safe, it is not approved for children."
+        expected = (
+            "The drug is safe. "
+            "However, it is not approved for children."
+        )
+        self.assertEqual(simplify_sentences(text), expected)
+
+    def test_incomplete_although_clause_does_not_crash(self):
+        text = "Although it rained,"
+        self.assertEqual(simplify_sentences(text), text)
+
+    def test_although_clause_with_relative_clause(self):
+        text = "Although the system, which is new, works, it fails often."
+        expected = (
+            "The system, which is new, works. "
+            "However, it fails often."
+        )
+        self.assertEqual(simplify_sentences(text), expected)
+
 
 
 if __name__ == "__main__":

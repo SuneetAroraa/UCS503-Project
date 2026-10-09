@@ -60,16 +60,25 @@ def compare_readability(original, simplified):
 
     return comparison
 
+
 def summarize_improvement(comparison):
     flesch_change = comparison["flesch_reading_ease"]["change"]
     grade_change = comparison["flesch_kincaid_grade"]["change"]
     smog_change = comparison["smog_index"]["change"]
     difficult_word_change = comparison["difficult_word_count"]["change"]
 
+    original_sentences = comparison["sentence_count"]["original"]
+    simplified_sentences = comparison["sentence_count"]["simplified"]
+
+    smog_applicable = (
+        original_sentences >= 30
+        and simplified_sentences >= 30
+    )
+
     readability_improved = (
         flesch_change > 0
         and grade_change < 0
-        and smog_change < 0
+        and (not smog_applicable or smog_change < 0)
     )
 
     return {
@@ -77,5 +86,6 @@ def summarize_improvement(comparison):
         "flesch_improvement": flesch_change,
         "grade_level_reduction": -grade_change,
         "smog_reduction": -smog_change,
+        "smog_applicable": smog_applicable,
         "difficult_words_reduced": -difficult_word_change,
     }
