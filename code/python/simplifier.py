@@ -6,13 +6,32 @@ nlp = spacy.load("en_core_web_sm")
 WORD_REPLACEMENTS = {
     "approximately": "about",
     "assist": "help",
+    "assists": "helps",
+    "assisted": "helped",
+    "assisting": "helping",
     "commence": "start",
+    "commences": "starts",
+    "commenced": "started",
+    "commencing": "starting",
     "demonstrate": "show",
+    "demonstrates": "shows",
+    "demonstrated": "showed",
+    "demonstrating": "showing",
     "numerous": "many",
     "utilize": "use",
+    "utilizes": "uses",
+    "utilized": "used",
+    "utilizing": "using",
     "require": "need",
     "requires": "needs",
+    "required": "needed",
+    "requiring": "needing",
+    "requirement": "need",
+    "requirements": "needs",
     "obtain": "get",
+    "obtains": "gets",
+    "obtained": "got",
+    "obtaining": "getting",
     "additional": "extra",
     "significant": "important",
 }
@@ -39,6 +58,19 @@ CONTEXT_REPLACEMENTS = {
 
 
 def simplify_words(text: str):
+    protected_phrases = {}
+    pattern = re.compile(
+        r"\bstatistically\s+significant\b|\bsignificant\s+other\b",
+        re.IGNORECASE,
+    )
+
+    def protect_phrase(match):
+        placeholder = f"ZXQPROTECTED{len(protected_phrases)}QXZ"
+        protected_phrases[placeholder] = match.group(0)
+        return placeholder
+
+    text = pattern.sub(protect_phrase, text)
+
     def replace_word(match):
         word = match.group(0)
         replacement = WORD_REPLACEMENTS.get(word.lower())
@@ -46,12 +78,20 @@ def simplify_words(text: str):
         if replacement is None:
             return word
 
-        if word[0].isupper():
+        if word.isupper():
+            return replacement.upper()
+
+        if word.istitle():
             return replacement.capitalize()
 
         return replacement
 
-    return re.sub(r"\b[A-Za-z]+\b", replace_word, text)
+    text = re.sub(r"\b[A-Za-z]+\b", replace_word, text)
+
+    for placeholder, phrase in protected_phrases.items():
+        text = text.replace(placeholder, phrase)
+
+    return text
 
 
 def simplify_sentences(text: str):
@@ -123,6 +163,30 @@ def simplify_sentences(text: str):
 
     return " ".join(simplified_sentences)
 
+def simplify_context(text: str):
+    replacements = sorted(
+        CONTEXT_REPLACEMENTS.items(),
+        key=lambda item: len(item[0]),
+        reverse=True,
+    )
+
+    for phrase, replacement in replacements:
+        pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+
+        def replace_phrase(match):
+            original = match.group(0)
+
+            if original.isupper():
+                return replacement.upper()
+
+            if original[0].isupper():
+                return replacement.capitalize()
+
+            return replacement
+
+        text = pattern.sub(replace_phrase, text)
+
+    return text
 
 def simplify_text(text: str):
     text = simplify_sentences(text)
@@ -131,11 +195,7 @@ def simplify_text(text: str):
 
     return text
 
-def simplify_context(text: str):
-    for complex_phrase, simple_phrase in CONTEXT_REPLACEMENTS.items():
-        text = text.replace(complex_phrase, simple_phrase)
 
-    return text
 
 if __name__ == "__main__":
 

@@ -31,11 +31,16 @@ def process_text(text: str):
 
 
 def main():
-    text = """The system makes use of numerous computational resources to process a large number of files."""
+    print("TEXT SIMPLIFIER")
+    text = input("Enter text to simplify: ").strip()
+
+    if not text:
+        print("No text entered. Exiting.")
+        return
 
     result = process_text(text)
 
-    print("ORIGINAL TEXT")
+    print("\nORIGINAL TEXT")
     print(text)
 
     print("\nSIMPLIFIED TEXT")
@@ -52,40 +57,25 @@ def main():
     for metric, values in result["comparison"].items():
         print(
             f"{metric}: "
-            f"{values['original']} → "
+            f"{values['original']} -> "
             f"{values['simplified']} "
             f"({values['change']:+.2f})"
         )
 
     print("\nIMPROVEMENT SUMMARY")
-
     print(
         "Readability improved:",
         "YES" if result["summary"]["readability_improved"] else "NO"
     )
-
-    print(
-        f"Flesch improvement: "
-        f"{result['summary']['flesch_improvement']:.2f}"
-    )
-
-    print(
-        f"Grade-level reduction: "
-        f"{result['summary']['grade_level_reduction']:.2f}"
-    )
+    print(f"Flesch improvement: {result['summary']['flesch_improvement']:.2f}")
+    print(f"Grade-level reduction: {result['summary']['grade_level_reduction']:.2f}")
 
     if result["summary"]["smog_applicable"]:
-        print(
-            f"SMOG reduction: "
-            f"{result['summary']['smog_reduction']:.2f}"
-        )
+        print(f"SMOG reduction: {result['summary']['smog_reduction']:.2f}")
     else:
         print("SMOG reduction: N/A (text has fewer than 30 sentences)")
 
-    print(
-        f"Difficult words reduced: "
-        f"{result['summary']['difficult_words_reduced']}"
-    )
+    print(f"Difficult words reduced: {result['summary']['difficult_words_reduced']}")
 
 if __name__ == "__main__":
     main()

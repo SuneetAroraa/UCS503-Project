@@ -65,6 +65,37 @@ class TestSimplifier(unittest.TestCase):
         )
         self.assertEqual(simplify_sentences(text), expected)
 
+    def test_inflected_words_are_simplified(self):
+        text = (
+            "She utilizes the tools, utilized the method, "
+            "and is obtaining data."
+        )
+        expected = (
+            "She uses the tools, used the method, "
+            "and is getting data."
+        )
+        self.assertEqual(simplify_words(text), expected)
+
+    def test_requirements_are_simplified(self):
+        self.assertEqual(
+            simplify_words("The requirements are listed."),
+            "The needs are listed.",
+        )
+
+    def test_domain_phrases_are_preserved(self):
+        text = (
+            "The result is statistically significant. "
+            "A significant other arrived."
+        )
+        self.assertEqual(simplify_words(text), text)
+
+    def test_context_replacement_ignores_case(self):
+        text = "Due to the fact that it rained, we stayed."
+        self.assertEqual(
+            simplify_context(text),
+            "Because it rained, we stayed.",
+        )
+
 
 
 if __name__ == "__main__":
