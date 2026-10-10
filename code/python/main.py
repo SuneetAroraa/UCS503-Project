@@ -1,7 +1,13 @@
-from preprocessing import preprocess
-from readability import calculate_readability
-from simplifier import simplify_text
-from evaluation import compare_readability, summarize_improvement
+if __package__:
+    from .preprocessing import preprocess
+    from .readability import calculate_readability
+    from .simplifier import simplify_text
+    from .evaluation import compare_readability, summarize_improvement
+else:
+    from preprocessing import preprocess
+    from readability import calculate_readability
+    from simplifier import simplify_text
+    from evaluation import compare_readability, summarize_improvement
 
 
 def process_text(text: str):
@@ -40,42 +46,64 @@ def main():
 
     result = process_text(text)
 
+    print("\n" + "=" * 65)
+    print("TEXT SIMPLIFICATION RESULTS")
+    print("=" * 65)
+
     print("\nORIGINAL TEXT")
     print(text)
 
     print("\nSIMPLIFIED TEXT")
     print(result["simplified_text"])
 
-    print("\nORIGINAL READABILITY")
-    print(result["original_readability"])
+    labels = {
+        "word_count": "Word Count",
+        "sentence_count": "Sentence Count",
+        "average_sentence_length": "Avg Sentence Length",
+        "flesch_reading_ease": "Flesch Reading Ease",
+        "flesch_kincaid_grade": "Grade Level",
+        "smog_index": "SMOG Index",
+        "difficult_word_count": "Difficult Words",
+    }
 
-    print("\nSIMPLIFIED READABILITY")
-    print(result["simplified_readability"])
+    print("\n" + "-" * 65)
+    print(f"{'METRIC':<26}{'ORIGINAL':>12}{'SIMPLIFIED':>14}{'CHANGE':>12}")
+    print("-" * 65)
 
-    print("\nCOMPARISON")
+    for metric, label in labels.items():
+        values = result["comparison"][metric]
 
-    for metric, values in result["comparison"].items():
+        original = values["original"]
+        simplified = values["simplified"]
+        change = values["change"]
+
         print(
-            f"{metric}: "
-            f"{values['original']} -> "
-            f"{values['simplified']} "
-            f"({values['change']:+.2f})"
+            f"{label:<26}"
+            f"{original:>12.2f}"
+            f"{simplified:>14.2f}"
+            f"{change:>+12.2f}"
         )
+
+    print("-" * 65)
+
+    summary = result["summary"]
 
     print("\nIMPROVEMENT SUMMARY")
     print(
         "Readability improved:",
-        "YES" if result["summary"]["readability_improved"] else "NO"
+        "YES" if summary["readability_improved"] else "NO"
     )
-    print(f"Flesch improvement: {result['summary']['flesch_improvement']:.2f}")
-    print(f"Grade-level reduction: {result['summary']['grade_level_reduction']:.2f}")
+    print(f"Flesch improvement: {summary['flesch_improvement']:.2f}")
+    print(f"Grade-level reduction: {summary['grade_level_reduction']:.2f}")
 
-    if result["summary"]["smog_applicable"]:
-        print(f"SMOG reduction: {result['summary']['smog_reduction']:.2f}")
+    if summary["smog_applicable"]:
+        print(f"SMOG reduction: {summary['smog_reduction']:.2f}")
     else:
         print("SMOG reduction: N/A (text has fewer than 30 sentences)")
 
-    print(f"Difficult words reduced: {result['summary']['difficult_words_reduced']}")
+    print(f"Difficult words reduced: {summary['difficult_words_reduced']}")
+    print("=" * 65)
+
 
 if __name__ == "__main__":
     main()

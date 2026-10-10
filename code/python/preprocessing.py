@@ -1,6 +1,7 @@
-import spacy
-
-nlp = spacy.load("en_core_web_sm")
+try:
+    from .nlp_model import nlp
+except ImportError:
+    from nlp_model import nlp
 
 
 def segment_sentences(text: str):

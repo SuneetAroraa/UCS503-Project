@@ -1,7 +1,8 @@
 import re
-import spacy
-
-nlp = spacy.load("en_core_web_sm")
+try:
+    from .nlp_model import nlp
+except ImportError:
+    from nlp_model import nlp
 
 WORD_REPLACEMENTS = {
     "approximately": "about",
@@ -34,6 +35,14 @@ WORD_REPLACEMENTS = {
     "obtaining": "getting",
     "additional": "extra",
     "significant": "important",
+    "assist": "help",
+    "assistance": "help",
+    "demonstrate": "show",
+    "demonstration": "example",
+    "approximately": "about",
+    "frequently": "often",
+    "sufficient": "enough",
+    "additional": "extra",
 }
 
 CONTEXT_REPLACEMENTS = {
@@ -54,6 +63,15 @@ CONTEXT_REPLACEMENTS = {
 
     "due to the fact that":
         "because",
+
+    "in order to": "to",
+    "in the event that": "if",
+    "at the present time": "now",
+    "prior to": "before",
+    "subsequent to": "after",
+    "has the ability to": "can",
+    "in close proximity to": "near",
+    "the majority of": "most",
 }
 
 
