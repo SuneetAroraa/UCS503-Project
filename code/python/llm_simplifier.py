@@ -3,7 +3,9 @@ import os
 
 from google import genai
 from google.genai import types
+from dotenv import load_dotenv
 
+load_dotenv()
 
 MODEL_NAME = "gemini-3.8-flash"
 
