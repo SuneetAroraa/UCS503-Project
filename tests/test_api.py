@@ -150,3 +150,67 @@ def test_invalid_mode_is_rejected():
     )
 
     assert response.status_code == 422
+
+
+def test_batch_rules_preserves_input_order_without_gemini():
+    texts = [
+        "Although the process is complicated, the team can finish it.",
+        "The application uses several resources to support its users.",
+    ]
+
+    with patch("code.python.api.simplify_many_with_gemini") as gemini:
+        response = client.post(
+            "/simplify/batch",
+            json={"texts": texts, "mode": "rules"},
+        )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert [item["index"] for item in data["results"]] == [0, 1]
+    assert [item["mode"] for item in data["results"]] == ["rules", "rules"]
+    assert all(item["selected_engine"] == "rules" for item in data["results"])
+    gemini.assert_not_called()
+
+
+def test_batch_gemini_failure_returns_rule_fallback_without_gemini_metrics():
+    texts = [
+        "Although the process is complicated, the team can finish it.",
+        "The application uses several resources to support its users.",
+    ]
+
+    with patch(
+        "code.python.api.simplify_many_with_gemini",
+        side_effect=RuntimeError("daily quota exhausted"),
+    ):
+        response = client.post(
+            "/simplify/batch",
+            json={"texts": texts, "mode": "llm"},
+        )
+
+    assert response.status_code == 200
+    results = response.json()["results"]
+    assert [item["index"] for item in results] == [0, 1]
+    assert all(item["selected_engine"] == "rules" for item in results)
+    assert all(item["fallback_used"] is True for item in results)
+    assert all(item["llm_text"] is None for item in results)
+    assert all(item["llm_readability"] is None for item in results)
+
+
+def test_batch_hybrid_rejects_meaning_change_and_uses_rules():
+    text = "The treatment is not approved for children under twelve years old."
+
+    with patch(
+        "code.python.api.simplify_many_with_gemini",
+        return_value=["The treatment is approved for children under twelve years old."],
+    ):
+        response = client.post(
+            "/simplify/batch",
+            json={"texts": [text], "mode": "hybrid"},
+        )
+
+    assert response.status_code == 200
+    item = response.json()["results"][0]
+    assert item["selected_engine"] == "rules"
+    assert item["fallback_used"] is True
+    assert item["meaning_check"]["safe"] is False
+    assert item["simplified_text"] == item["rule_based_text"]

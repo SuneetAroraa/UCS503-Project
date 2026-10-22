@@ -1,0 +1,19 @@
+
+{
+  "manifest_version": 3,
+  "name": "Readable - Text Simplifier",
+  "version": "1.0.0",
+  "description": "Simplify webpage text using rule-based and Gemini-powered text simplification.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:8000/*"
+  ],
+  "action": {
+    "default_title": "Readable",
+    "default_popup": "popup.html"
+  }
+}

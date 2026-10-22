@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Readable local article test</title>
+  <style>
+    body { max-width: 760px; margin: 3rem auto; padding: 0 1rem; font: 18px/1.7 Georgia, serif; color: #202820; }
+    nav, aside { padding: 1rem; background: #f1f2ee; font: 14px/1.4 sans-serif; }
+    article { margin: 2rem 0; }
+  </style>
+</head>
+<body>
+  <nav><a href="#article">Site navigation that should stay unchanged</a></nav>
+  <main>
+    <article id="article">
+      <header><h1>How community gardens improve cities</h1></header>
+      <p>Although community gardens require careful planning and regular maintenance, they can make dense neighborhoods healthier and more connected. Residents grow fresh food, share practical knowledge, and create welcoming outdoor spaces that people can use throughout the year.</p>
+      <p>Research groups have found that access to green spaces may support mental well-being, especially when people can participate in caring for those spaces. Garden members often organize workdays, teach children how plants grow, and make decisions together about water use and shared tools.</p>
+      <p>Some gardens also partner with local schools and food programs. For example, volunteers may donate part of each harvest to a nearby pantry, while teachers use the garden to explain biology, nutrition, and seasonal change. These partnerships can help a garden serve more people.</p>
+      <p>Starting a garden can be difficult because land, water, and long-term funding are not always available. Organizers can reduce these problems by agreeing on clear responsibilities, choosing durable equipment, and asking nearby residents what they need before work begins.</p>
+      <p>Well-run gardens do not solve every problem in a city, but they can provide useful benefits at a local level. A small shared space may offer fresh produce, a place to meet neighbors, and a chance to learn new skills. <a href="https://example.com/gardens" id="test-link">Read more about urban gardens</a>, and see this <strong>important phrase</strong> and <em>emphasized phrase</em> remain formatted.</p>
+    </article>
+  </main>
+  <aside>Related stories and recommendations should stay unchanged.</aside>
+  <p id="link-status" aria-live="polite">The link's page event handler has not run yet.</p>
+  <script>
+    document.getElementById("test-link").addEventListener("click", (event) => {
+      event.preventDefault();
+      document.getElementById("link-status").textContent = "The original link event handler still works.";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Readable</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <header>
+      <div class="logo">R</div>
+      <div>
+        <h1>Readable</h1>
+        <p class="subtitle">Simplify the web as you read</p>
+      </div>
+    </header>
+
+    <section class="mode-section">
+      <label for="mode">Simplification mode</label>
+      <select id="mode">
+        <option value="rules" selected>Rules — quick</option>
+        <option value="hybrid">Hybrid — recommended</option>
+        <option value="llm">Gemini</option>
+      </select>
+    </section>
+
+    <button id="toggleButton" class="primary-button">
+      Turn on simplification
+    </button>
+
+    <p id="status" role="status" aria-live="polite">
+      Ready to simplify this page.
+    </p>
+
+    <section id="results" class="results hidden">
+      <h2>Readability results</h2>
+      <p id="blocksResult"></p>
+      <div class="metric"><span>Changed</span><strong id="changedResult">0</strong></div>
+      <div class="metric"><span>Unchanged</span><strong id="unchangedResult">0</strong></div>
+      <div class="metric"><span>Skipped (short/capped)</span><strong id="skippedResult">0</strong></div>
+      <div class="metric"><span>Kept original (error/invalid)</span><strong id="keptResult">0</strong></div>
+      <div class="metric"><span>Rule fallbacks (subset)</span><strong id="fallbackResult">0</strong></div>
+      <label class="highlight-option"><input id="highlight" type="checkbox" checked> Highlight changed paragraphs</label>
+    </section>
+
+    <p class="footnote">
+      Requires your local Python API. Gemini modes send text to Google's API.
+    </p>
+  </main>
+</body>
+</html>
